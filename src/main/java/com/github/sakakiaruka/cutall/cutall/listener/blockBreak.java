@@ -53,7 +53,7 @@ public class blockBreak implements Listener {
                     double z = block.getZ() + f_radius*Math.sin(rad);
                     Location L = new Location(block.getWorld(),x,h,z);
                     Block target = L.getBlock();
-                    if(target.getType().equals(material)){
+                    if(target.getType().equals(material) && !blocks.contains(target)){
                         //match cut block by a player.
                         blocks.add(target);
                     }

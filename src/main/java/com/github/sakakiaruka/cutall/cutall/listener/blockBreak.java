@@ -16,7 +16,7 @@ public class blockBreak implements Listener {
 
     private final int maxHeight = 40;
     private final int f_radius = 5;
-    private final int degrees = 30;
+    private final int degrees = 10;
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event){
@@ -36,8 +36,9 @@ public class blockBreak implements Listener {
             // height loop
             Location location = new Location(block.getWorld(),block.getX(),h,block.getZ());
             Block b = location.getBlock();
-            //if(!b.getType().equals(block.getType())){
-            if(!b.getType().equals(material)){
+            Material m = b.getType();
+
+            if(!m.equals(material) && !m.name().contains("LEAVES")){
                 //an upper block doesn't match with a first cut log type.
                 break;
             }

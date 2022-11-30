@@ -15,8 +15,8 @@ import java.util.List;
 public class blockBreak implements Listener {
 
     private final int maxHeight = 40;
-    private final int f_radius = 3;
-    private final int degrees = 10;
+    private final int f_radius = 5;
+    private final int degrees = 30;
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event){
@@ -34,40 +34,43 @@ public class blockBreak implements Listener {
         List<Block> blocks = new ArrayList<>();
         for(int h=block.getY();h<(h+maxHeight);h++){
             // height loop
-            Block b = new Location(block.getWorld(),block.getX(),h,block.getY()).getBlock();
-            if(!b.getType().equals(block.getType())){
+            Location location = new Location(block.getWorld(),block.getX(),h,block.getZ());
+            Block b = location.getBlock();
+            //if(!b.getType().equals(block.getType())){
+            if(!b.getType().equals(material)){
                 //an upper block doesn't match with a first cut log type.
                 break;
             }
 
             //drop items (from those blocks)
             for(ItemStack i:b.getDrops()){
-                player.getWorld().dropItemNaturally(player.getLocation(),i);
+                player.getWorld().dropItem(player.getLocation(),i);
             }
 
-            for(int r=1;r<=3;r++){
+            //replace air
+            b.setType(Material.AIR);
+
+            for(int r=1;r<=f_radius;r++){
                 //range loop
                 for(double rad=0;rad<(2*Math.PI);rad+=(2*Math.PI/(360/degrees))){
                     //radian loop
-                    double x = block.getX() + f_radius*Math.cos(rad);
-                    double z = block.getZ() + f_radius*Math.sin(rad);
+                    double x = block.getX() + r*Math.cos(rad);
+                    double z = block.getZ() + r*Math.sin(rad);
+
                     Location L = new Location(block.getWorld(),x,h,z);
                     Block target = L.getBlock();
-                    if(target.getType().equals(material) && !blocks.contains(target)){
+                    if(target.getType().equals(material) && (!blocks.contains(target))){
                         //match cut block by a player.
                         blocks.add(target);
                     }
                 }
             }
         }
-        this.cut(blocks,player.getLocation());
-    }
-
-    private void cut(List<Block> blocks,Location L){
         for(Block b:blocks){
             for(ItemStack i:b.getDrops()){
-                L.getWorld().dropItemNaturally(L,i);
+                player.getWorld().dropItem(player.getLocation(),i);
             }
+            b.setType(Material.AIR);
         }
     }
 }

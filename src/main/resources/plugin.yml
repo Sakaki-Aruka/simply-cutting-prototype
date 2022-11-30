@@ -1,0 +1,5 @@
+name: CutAll
+version: '${project.version}'
+main: com.github.sakakiaruka.cutall.cutall.CutAll
+api-version: 1.19
+authors: [ SakakiAruka ]
